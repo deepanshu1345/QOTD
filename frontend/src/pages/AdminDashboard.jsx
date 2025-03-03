@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Settings, Check, X, RefreshCw, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import {useAuth} from "../context/AuthContext.jsx";
 
 function AdminDashboard() {
   const [pendingQuotes, setPendingQuotes] = useState([]);
-  const [newQuote, setNewQuote] = useState({ text: '', author: '' });
   const [showAddForm, setShowAddForm] = useState(false);
+  const [text, setText] = useState('');
+  const [author, setAuthor] = useState('');
+  const { token, user  } = useAuth();
 
   const fetchPendingQuotes = async () => {
     try {
@@ -41,18 +44,6 @@ function AdminDashboard() {
     }
   };
 
-  const handleAddQuote = async () => {
-    try {
-      await api.post('/admin/quotes', newQuote);
-      toast.success('Quote added!');
-      setNewQuote({ text: '', author: '' });
-      setShowAddForm(false);
-      await fetchPendingQuotes();
-    } catch (error) {
-      toast.error('Failed to add quote');
-    }
-  };
-
   return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-8">
@@ -69,40 +60,51 @@ function AdminDashboard() {
                 <RefreshCw className="h-4 w-4 mr-1" />
                 Refresh
               </button>
-              <button
-                  onClick={() => setShowAddForm(!showAddForm)}
-                  className="flex items-center px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                <Plus className="h-4 w-4 mr-1" />
-                {showAddForm ? "Cancel" : "Add Quote"}
-              </button>
+              {/*<button*/}
+              {/*    onClick={() => setShowAddForm(!showAddForm)}*/}
+              {/*    className="flex items-center px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"*/}
+              {/*>*/}
+              {/*  <Plus className="h-4 w-4 mr-1" />*/}
+              {/*  {showAddForm ? "Cancel" : "Add Quote"}*/}
+              {/*</button>*/}
             </div>
           </div>
 
-          {showAddForm && (
-              <div className="mb-6 border rounded-lg p-4">
-                <input
-                    type="text"
-                    placeholder="Quote Text"
-                    value={newQuote.text}
-                    onChange={(e) => setNewQuote({ ...newQuote, text: e.target.value })}
-                    className="w-full mb-2 p-2 border rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="Author"
-                    value={newQuote.author}
-                    onChange={(e) => setNewQuote({ ...newQuote, author: e.target.value })}
-                    className="w-full mb-2 p-2 border rounded"
-                />
-                <button
-                    onClick={handleAddQuote}
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                >
-                  Add
-                </button>
-              </div>
-          )}
+          {/*{showAddForm && (*/}
+          {/*    <div className="mb-6 border rounded-lg p-4">*/}
+          {/*      <form onSubmit={handleAddQuote}> /!* Added form element and onSubmit handler *!/*/}
+          {/*        <input*/}
+          {/*            type="text"*/}
+          {/*            placeholder="Quote Text"*/}
+          {/*            value={text} // Use 'text' state*/}
+          {/*            onChange={(e) => setText(e.target.value)} // Update 'text' state*/}
+          {/*            className="w-full mb-2 p-2 border rounded"*/}
+          {/*            required // Added required attribute*/}
+          {/*        />*/}
+          {/*        <input*/}
+          {/*            type="text"*/}
+          {/*            placeholder="Author"*/}
+          {/*            value={author} // Use 'author' state*/}
+          {/*            onChange={(e) => setAuthor(e.target.value)} // Update 'author' state*/}
+          {/*            className="w-full mb-2 p-2 border rounded"*/}
+          {/*            required // Added required attribute*/}
+          {/*        />*/}
+          {/*        <button*/}
+          {/*            type="submit" // Changed to submit button*/}
+          {/*            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"*/}
+          {/*        >*/}
+          {/*          Add*/}
+          {/*        </button>*/}
+          {/*        <button*/}
+          {/*            type="button" // Cancel button type button to prevent form submission*/}
+          {/*            onClick={() => setShowAddForm(false)}*/}
+          {/*            className="px-4 py-2 ml-2 bg-gray-400 text-white rounded hover:bg-gray-500"*/}
+          {/*        >*/}
+          {/*          Cancel*/}
+          {/*        </button>*/}
+          {/*      </form>*/}
+          {/*    </div>*/}
+          {/*)}*/}
 
           <div className="space-y-6">
             {pendingQuotes.length === 0 ? (
